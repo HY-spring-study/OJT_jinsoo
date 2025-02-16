@@ -2,6 +2,9 @@
 .gradle/
 build/
 !gradle/wrapper/gradle-wrapper.jar
+.gradle/**/executionHistory/
+.gradle/**/executionHistory.lock
+.gradle/**/buildOutputCleanup/
 
 # STS (Spring Tool Suite) / Eclipse 관련 파일
 .apt_generated
@@ -17,6 +20,8 @@ bin/
 
 # IntelliJ IDEA 관련 파일
 .idea/
+.idea/workspace.xml
+.idea/libraries/
 *.iws
 *.iml
 *.ipr
@@ -38,9 +43,17 @@ out/
 .DS_Store
 Thumbs.db
 
+# 환경 설정 파일 (보안 관련)
+application.yml
+application-*.yml
+.env
+
 # 로그 파일
 logs/
 *.log
+
+# 테스트 관련 파일
+test-output/
 
 # 컴파일된 클래스 파일
 *.class
@@ -49,7 +62,17 @@ logs/
 *.mv.db
 *.h2.db
 
+# MySQL 및 PostgreSQL 관련 파일
+*.sql
+pgdata/
+
 # 빌드 산출물 (jar, war, ear)
 *.jar
 *.war
 *.ear
+
+# Spring Boot DevTools 관련
+spring-boot-devtools.properties
+
+# Docker 관련 파일
+docker-compose.override.yml
