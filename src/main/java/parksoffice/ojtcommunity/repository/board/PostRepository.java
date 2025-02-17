@@ -15,9 +15,9 @@ import java.util.List;
  * </p>
  *
  * <p>
- *     제네릭 타입 매개변수:
- *     - Post: 관리할 엔티티 타입
- *     - Long: Post 엔티티의 기본 키 타입
+ *     제네릭 타입 매개변수:<br>
+ *     - Post: 관리할 엔티티 타입<br>
+ *     - Long: Post 엔티티의 기본 키 타입<br>
  * </p>
  *
  * @author CRISPYTYPER
