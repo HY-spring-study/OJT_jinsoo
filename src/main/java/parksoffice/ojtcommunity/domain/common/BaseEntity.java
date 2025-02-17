@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
  * 모든 엔티티에서 공통적으로 사용하는 기본 필드(id, createdAt, updatedAt)를 제공하는 추상 클래스.
  * JPA의 {@code @MappedSuperclass}를 사용하여 테이블로 생성되지 않고, 상속받는 엔티티에서 해당 필드를 상속받아 사용한다.
  * </p>
+ *
+ * @author CRISPYTYPER
  */
 @MappedSuperclass // 이 클래스를 직접 테이블로 만들지 않고, 자식 엔티티가 필드만 상속받도록 함
 @Getter
