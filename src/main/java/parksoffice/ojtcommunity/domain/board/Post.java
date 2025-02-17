@@ -48,6 +48,14 @@ public class Post extends BaseEntity { // 게시글 엔티티
     private Member author;
 
     /**
+     * 게시글이 속한 게시판
+     * <p>게시글은 하나의 게시판(Board)에 속한다. (단방향 연관관계)</p>
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
+
+    /**
      * 게시글 조회수
      * <p>기본값은 0이며, 사용자가 게시글을 조회할 때마다 증가한다.</p>
      */
