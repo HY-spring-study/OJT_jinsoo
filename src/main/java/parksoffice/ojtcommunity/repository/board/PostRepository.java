@@ -64,6 +64,28 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByCreatedAtAsc();
 
     /**
+     * 조회수가 높은 게시글부터 순서대로 게시글 목록을 반환한다.
+     *
+     * @return 조회수가 많은 게시글부터 정렬된 게시글 목록
+     */
+    List<Post> findAllByOrderByViewCountDesc();
+
+    /**
+     * 추천수가 높은 게시글부터 순서대로 게시글 목록을 반환한다.
+     *
+     * @return 추천수가 많은 게시글부터 정렬된 게시글 목록
+     */
+    List<Post> findAllByOrderByRecommendationCountDesc();
+
+    /**
+     * 특정 사용자가 작성한 게시글 목록을 최신순으로 반환한다.
+     *
+     * @param username 사용자(작성자) 이름
+     * @return 해당 사용자가 작성한 게시글(최신 날짜부터 정렬) 목록
+     */
+    List<Post> findByAuthor_UsernameOrderByCreatedAtDesc(String username);
+
+    /**
      * 특정 기간 사이에 작성된 게시글 목록을 반환한다.
      *
      * @param start 시작 일시 (포함)
