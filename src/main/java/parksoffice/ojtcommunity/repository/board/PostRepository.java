@@ -70,5 +70,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param end   종료 일시 (포함)
      * @return 지정한 기간 내에 작성된 게시글 목록
      */
-    List<Post> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<Post> findAllByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+
 }
