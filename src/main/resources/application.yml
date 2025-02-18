@@ -5,12 +5,18 @@ spring:
     password:
     driver-class-name: org.h2.Driver
 
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: create # 애플리케이션 실행 시 기존 테이블을 삭제하고, 새롭게 테이블을 생성함.
+#      ddl-auto: update # 테이블 구조 변경이 있으면 업데이트, 기존 데이터는 보존됨. 나중에 정상 동작하면 update로 바꿔보기.
     properties:
       hibernate:
-#        show_sql: true
+        show_sql: true
         format_sql: true
 
 logging:
