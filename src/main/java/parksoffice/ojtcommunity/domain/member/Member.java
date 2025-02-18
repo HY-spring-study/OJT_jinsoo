@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import parksoffice.ojtcommunity.domain.common.BaseEntity;
 
@@ -38,6 +39,7 @@ public class Member extends BaseEntity {
      * <p>비밀번호는 반드시 입력해야 하며, 보안을 위해 암호화하여 저장하는 것이 권장된다.</p>
      */
     @NotBlank(message = "비밀번호는 필수입니다.")
+    @Size(min = 4, message = "비밀번호는 최소 4자리 이상이어야 합니다.")
     @Column(nullable = false)
     private String password;
 
