@@ -92,6 +92,31 @@ class MemberServiceTest {
     }
 
     @Test
+    void testGetMemberById_Success() {
+        // given
+        // ID가 1L인 회원 객체를 빌더 패턴을 이용하여 생성한다.
+        Member member = Member.builder()
+                .username("testUser")
+                .password("testPass")
+                .build();
+
+        // findById(1L) 호출 시 member를 Optional로 감싸서 반환하도록 설정한다.
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(member));
+
+        // when
+        // memberService.getMemberById(1L)를 호출하여 회원 정보를 조회한다.
+        Member result = memberService.getMemberById(1L);
+
+        // then
+        // 반환된 결과가 null이 아니어야 한다.
+        assertNotNull(result);
+        // 반환된 회원의 username이 "testUser"인지 검증한다.
+        assertEquals("testUser", result.getUsername());
+        // memberRepository.findById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findById(1L);
+    }
+
+    @Test
     void getMemberByUsername() {
     }
 
