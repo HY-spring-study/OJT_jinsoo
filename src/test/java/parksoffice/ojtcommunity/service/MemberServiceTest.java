@@ -31,7 +31,7 @@ class MemberServiceTest {
                 .password("testPass")
                 .build();
 
-        // 중복 회원이 없음을 시뮬레이션하기 위해, findByUser("testUser") 호출 시 Optional.empty()를 반환하도록 설정한다.
+        // 중복 회원이 없음을 시뮬레이션하기 위해, findByUsername("testUser") 호출 시 Optional.empty()를 반환하도록 설정한다.
         when(memberRepository.findByUsername("testUser")).thenReturn(Optional.empty());
         // save 호출 시, 전달된 회원 객체를 받아 '저장 후' id가 부여되었다고 가정한 새 Member 객체를 반환하도록 설정한다.
         // 테스트 코드에서는 가정만 하지만, 실제로는 JPA가 save()를 호출 후 엔티티에 id를 자동으로 할당한다.
