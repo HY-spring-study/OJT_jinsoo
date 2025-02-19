@@ -134,6 +134,32 @@ class MemberServiceTest {
     }
 
     @Test
+    void testGetMemberByUsername_Success() {
+        // given
+        // username이 "testUser"인 회원 객체를 빌더 패턴을 이용하여 생성한다.
+        Member member = Member.builder()
+                .username("testUser")
+                .password("testPass")
+                .build();
+
+        // findByUsername("testUser") 호출 시 member를 Optional로 감싸서 반환하도록 설정한다.
+        when(memberRepository.findByUsername("testUser")).thenReturn(Optional.of(member));
+
+        // when
+        // memberService.getMemberByUsername("testUser")를 호출하여 회원 정보를 조회한다.
+        Member result = memberService.getMemberByUsername("testUser");
+
+        // then
+        // 반환된 결과가 null이 아니어야 한다.
+        assertNotNull(result);
+        // 반환된 회원의 username이 "testUser"인지 검증한다.
+        assertEquals("testUser", result.getUsername());
+        // memberRepository.findByUsername("testUser")가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findByUsername("testUser");
+    }
+
+
+    @Test
     void getMemberByUsername() {
     }
 
