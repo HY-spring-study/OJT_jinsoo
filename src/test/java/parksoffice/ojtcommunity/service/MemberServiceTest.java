@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import parksoffice.ojtcommunity.domain.member.Member;
+import parksoffice.ojtcommunity.dto.UpdateMemberDto;
 import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.exception.MemberNotFoundException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
@@ -202,6 +203,61 @@ class MemberServiceTest {
         verify(memberRepository, times(1)).findByUsernameContaining("test");
     }
 
+    @Test
+    void testUpdateMember_Success() {
+        // given
+        // ID가 1L인 기존 회원 객체를 생성하고, findById(1L) 호출 시 해당 회원을 반환하도록 설정한다.
+        Member existingMember = Member.builder()
+                .username("oldUser")
+                .password("oldPass")
+                .build();
+        when(memberRepository.findById(1L)).thenReturn(Optional.of(existingMember));
+
+        // 회원 정보 변경을 위한 DTO 객체를 생성한다.
+        UpdateMemberDto updateMemberDto = new UpdateMemberDto();
+        updateMemberDto.setUsername("newUser");
+        updateMemberDto.setPassword("newPass");
+
+        // 기존 회원 객체를 저장할 때 동일한 객체를 반환하도록 설정한다.
+        when(memberRepository.save(existingMember)).thenReturn(existingMember);
+
+        // when
+        // memberService.updateMember(1L, updateMemberDto)를 호출하여 회원 정보를 업데이트한다.
+        Member updated = memberService.updateMember(1L, updateMemberDto);
+
+        // then
+        // 반환된 결과가 null이 아니어야 한다.
+        assertNotNull(updated);
+        // 변경된 회원의 username이 "newUser"인지 검증한다.
+        assertEquals("newUser", updated.getUsername());
+        // 변경된 회원의 password가 "newPass"인지 검증한다.
+        assertEquals("newPass", updated.getPassword());
+        // memberRepository.findById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findById(1L);
+        // memberRepository.save(existingMember)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).save(existingMember);
+    }
+
+    @Test
+    void testUpdateMember_NotFound() {
+        // given
+        // ID가 1L인 회원이 존재하지 않는 상황을 가정하고,
+        // findById(1L) 호출 시 Optional.empty()를 반환하도록 설정한다.
+        when(memberRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // 회원 정보 변경을 위한 DTO 객체를 생성한다.
+        UpdateMemberDto updateMemberDto = new UpdateMemberDto();
+        updateMemberDto.setUsername("newUser");
+        updateMemberDto.setPassword("newPass");
+
+        // then
+        // memberService.updateMember(1L, updateMemberDto)를 호출하면 MemberNotFoundException 예외가 발생해야 한다.
+        assertThrows(MemberNotFoundException.class, () -> memberService.updateMember(1L, updateMemberDto));
+
+        // memberRepository.findById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findById(1L);
+    }
+    
     @Test
     void getMemberByUsername() {
     }
