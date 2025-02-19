@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import parksoffice.ojtcommunity.domain.member.Member;
+import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
 import java.util.Optional;
@@ -61,7 +62,33 @@ class MemberServiceTest {
     }
 
     @Test
-    void getMemberById() {
+    void testRegisterMember_Duplicate() {
+        // given
+        // 신규 회원 객체를 빌더 패턴을 이용하여 생성한다.(기존에 있는 멤버와 username이 중복됨)
+        Member newMember = Member.builder()
+                .username("duplicateUser")
+                .password("pass123")
+                .build();
+
+        // 기존에 repository에 존재하고 있었던 회원 (신규 회원과 동일한 username을 이미 사용중)
+        Member existingMember = Member.builder()
+                .username("duplicateUser")
+                .password("otherPass")
+                .build();
+
+        // findByUsername("duplicateUser") 호출 시 existingMember를 Optional로 감싸서 반환하도록 설정한다.
+        when(memberRepository.findByUsername("duplicateUser")).thenReturn(Optional.of(existingMember));
+
+        // then
+        // memberService.registerMember(newMember)를 호출하면 DuplicateMemberException 예외가 발생해야한다.
+        // 해당 예외가 발생하지 않으면 test fail
+        assertThrows(DuplicateMemberException.class, () -> memberService.registerMember(newMember));
+
+        // memberRepository.findByUsername("duplicateUser")가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findByUsername("duplicateUser");
+        // memberRepository.save(any(Member.class))가 단 한번도 호출되지 않았음을 검증한다.
+        // any(Member.class) → save()가 호출되었다면, 어떤 Member 객체가 인자로 들어왔든 상관없이 검증
+        verify(memberRepository, never()).save(any(Member.class));
     }
 
     @Test
