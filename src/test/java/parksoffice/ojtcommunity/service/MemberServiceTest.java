@@ -7,6 +7,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.exception.DuplicateMemberException;
+import parksoffice.ojtcommunity.exception.MemberNotFoundException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
 import java.util.Optional;
@@ -114,6 +115,22 @@ class MemberServiceTest {
         assertEquals("testUser", result.getUsername());
         // memberRepository.findById(1L)가 정확히 한 번 호출되었는지 검증한다.
         verify(memberRepository, times(1)).findById(1L);
+    }
+
+    @Test
+    void testGetMemberById_NotFound() {
+        // given
+        // ID가 2L인 회원이 존재하지 않는 상황을 가정하고,
+        // findById(2L) 호출 시 Optional.empty()를 반환하도록 설정한다.
+        when(memberRepository.findById(2L)).thenReturn(Optional.empty());
+
+        // then
+        // memberService.getMemberById(2L)를 호출하면 MemberNotFoundException 예외가 발생해야 한다.
+        // 해당 예외가 발생하지 않으면 테스트 실패.
+        assertThrows(MemberNotFoundException.class, () -> memberService.getMemberById(2L));
+
+        // memberRepository.findById(2L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findById(2L);
     }
 
     @Test
