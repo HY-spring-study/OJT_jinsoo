@@ -257,20 +257,39 @@ class MemberServiceTest {
         // memberRepository.findById(1L)가 정확히 한 번 호출되었는지 검증한다.
         verify(memberRepository, times(1)).findById(1L);
     }
-    
+
     @Test
-    void getMemberByUsername() {
+    void testDeleteMemberById_Success() {
+        // given
+        // ID가 1L인 회원이 존재하는 상황을 가정하고,
+        // existsById(1L) 호출 시 true를 반환하도록 설정한다.
+        when(memberRepository.existsById(1L)).thenReturn(true);
+
+        // when
+        // memberService.deleteMemberById(1L)를 호출하여 해당 회원을 삭제한다.
+        memberService.deleteMemberById(1L);
+
+        // then
+        // memberRepository.existsById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).existsById(1L);
+        // memberRepository.deleteById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).deleteById(1L);
     }
 
     @Test
-    void searchMembersByUsername() {
-    }
+    void testDeleteMemberById_NotFound() {
+        // given
+        // ID가 1L인 회원이 존재하지 않는 상황을 가정하고,
+        // existsById(1L) 호출 시 false를 반환하도록 설정한다.
+        when(memberRepository.existsById(1L)).thenReturn(false);
 
-    @Test
-    void updateMember() {
-    }
+        // then
+        // memberService.deleteMemberById(1L)를 호출하면 MemberNotFoundException 예외가 발생해야 한다.
+        assertThrows(MemberNotFoundException.class, () -> memberService.deleteMemberById(1L));
 
-    @Test
-    void deleteMemberById() {
+        // memberRepository.existsById(1L)가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).existsById(1L);
+        // memberRepository.deleteById(anyLong())가 호출되지 않았음을 검증한다.
+        verify(memberRepository, never()).deleteById(anyLong());
     }
 }
