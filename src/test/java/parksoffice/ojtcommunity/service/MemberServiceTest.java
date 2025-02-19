@@ -10,6 +10,8 @@ import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.exception.MemberNotFoundException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -158,6 +160,47 @@ class MemberServiceTest {
         verify(memberRepository, times(1)).findByUsername("testUser");
     }
 
+    @Test
+    void testGetMemberByUsername_NotFound() {
+        // given
+        // username이 "nonexistent"인 회원이 존재하지 않는 상황을 가정하고,
+        // findByUsername("nonexistent") 호출 시 Optional.empty()를 반환하도록 설정한다.
+        when(memberRepository.findByUsername("nonexistent")).thenReturn(Optional.empty());
+
+        // then
+        // memberService.getMemberByUsername("nonexistent")를 호출하면 MemberNotFoundException 예외가 발생해야 한다.
+        // 해당 예외가 발생하지 않으면 테스트 실패.
+        assertThrows(MemberNotFoundException.class, () -> memberService.getMemberByUsername("nonexistent"));
+
+        // memberRepository.findByUsername("nonexistent")가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findByUsername("nonexistent");
+    }
+
+    @Test
+    void testSearchMembersByUsername() {
+        // given
+        // "test"라는 키워드를 포함하는 두 개의 회원 객체를 생성한다.
+        Member member1 = Member.builder().username("testUser1").password("pass1").build();
+        Member member2 = Member.builder().username("testUser2").password("pass2").build();
+
+        // 회원 목록을 리스트에 추가한다.
+        List<Member> members = Arrays.asList(member1, member2);
+
+        // findByUsernameContaining("test") 호출 시 members 리스트를 반환하도록 설정한다.
+        when(memberRepository.findByUsernameContaining("test")).thenReturn(members);
+
+        // when
+        // memberService.searchMembersByUsername("test")를 호출하여 키워드를 포함하는 회원 목록을 검색한다.
+        List<Member> result = memberService.searchMembersByUsername("test");
+
+        // then
+        // 반환된 결과가 null이 아니어야 한다.
+        assertNotNull(result);
+        // 반환된 회원 목록의 크기가 2개인지 검증한다.
+        assertEquals(2, result.size());
+        // memberRepository.findByUsernameContaining("test")가 정확히 한 번 호출되었는지 검증한다.
+        verify(memberRepository, times(1)).findByUsernameContaining("test");
+    }
 
     @Test
     void getMemberByUsername() {
