@@ -1,4 +1,4 @@
-package parksoffice.ojtcommunity.dto;
+package parksoffice.ojtcommunity.dto.member;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -7,8 +7,10 @@ import lombok.Setter;
 
 /**
  * 회원 정보 업데이트에 사용되는 DTO.
+ * <p>
  * 클라이언트로부터 username과 password만 전달받으며,
  * 이 외의 필드는 업데이트하지 않는다.
+ * </p>
  */
 @Getter
 @Setter
