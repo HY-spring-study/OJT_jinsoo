@@ -7,6 +7,9 @@ import lombok.experimental.SuperBuilder;
 import parksoffice.ojtcommunity.domain.common.BaseEntity;
 import parksoffice.ojtcommunity.domain.member.Member;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * 게시글(Post) 엔티티 클래스
  *
@@ -81,15 +84,18 @@ public class Post extends BaseEntity { // 게시글 엔티티
     private int viewCount = 0;
 
     /**
-     * 게시글 추천수
+     * 게시글 추천 정보 리스트
      * <p>
-     *     기본값은 0이며, 사용자가 게시글을 추천할 때마다 증가시키는 로직은
-     *     {@link #incrementRecommendationCount()} 메서드를 통해 처리하며, 외부에서 직접 수정되면 안 된다.
+     * 이 컬렉션은 해당 게시글에 대한 추천 정보를 제공하며,
+     * cascade 옵션과 orphanRemoval 옵션을 통해 게시글이 삭제될 때 연관된 추천 정보도 함께 삭제된다.
+     * 각 회원은 한 게시글에 대해 최대 한 번 추천할 수 있도록 unique 제약 조건은 PostRecommendation에서 관리된다.
      * </p>
      */
+    // cascade = CascadeType.ALL
+    // Post 엔티티를 저장(persist), 수정(merge), 삭제(remove)할 때, 이와 연관된 모든 PostRecommendation 엔티티에도 동일한 작업을 자동으로 수행한다.
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    @Column(nullable = false)
-    private int recommendationCount = 0;
+    private List<PostRecommendation> recommendations = new ArrayList<>();
 
     //== 도메인 메서드 ==//
 
@@ -101,9 +107,24 @@ public class Post extends BaseEntity { // 게시글 엔티티
     }
 
     /**
-     * 게시글 추천수를 1 증가시킨다.
+     * 새로운 추천(PostRecommendation)을 추가한다.
+     * <p>
+     *     이 메서드는 추천 정보를 외부에서 직접 수정하는 것을 방지하고,
+     *     추천 컬렉션에 추천 객체를 추가하는 방식으로 추천수를 관리한다.
+     * </p>
+     *
+     * @param recommendation 추가할 추천 정보
      */
-    public void incrementRecommendationCount() {
-        this.recommendationCount++;
+    public void addRecommendation(PostRecommendation recommendation) {
+        this.recommendations.add(recommendation);
+    }
+
+    /**
+     * 현재 게시글의 추천수를 반환한다.
+     *
+     * @return 추천수 (추천 정보 컬렉션의 크기)
+     */
+    public int getRecommendationCount() {
+        return recommendations.size();
     }
 }
