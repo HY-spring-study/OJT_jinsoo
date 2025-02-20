@@ -47,6 +47,7 @@ public class PostService {
      * @return 조회된 게시글 엔티티
      * @throws PostNotFoundException 게시글이 없을 경우
      */
+    @Transactional(readOnly = true)
     public Post getPostById(Long id) {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
