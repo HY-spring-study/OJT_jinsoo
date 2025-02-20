@@ -19,7 +19,6 @@ import parksoffice.ojtcommunity.domain.common.BaseEntity;
  */
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -38,6 +37,7 @@ public class Board extends BaseEntity {
      * 게시판 설명
      * <p>게시판의 성격이나 설명을 담는다.</p>
      */
+    @Setter
     @Column(length = 500)
     private String description;
 }
