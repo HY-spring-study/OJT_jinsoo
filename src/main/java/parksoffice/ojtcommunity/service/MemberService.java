@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import parksoffice.ojtcommunity.domain.member.Member;
-import parksoffice.ojtcommunity.dto.UpdateMemberDto;
+import parksoffice.ojtcommunity.dto.member.UpdateMemberDto;
 import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.exception.MemberNotFoundException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
