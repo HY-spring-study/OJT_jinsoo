@@ -12,7 +12,10 @@ import parksoffice.ojtcommunity.domain.common.BaseEntity;
  *
  * <p>자유게시판, 유머게시판 등 게시판의 기본 정보를 저장한다.</p>
  * <p>이 엔티티는 단방향 관계로 구현되어 있으며, 게시글(Post) 엔티티에서 {@code @ManyToOne}으로 Board를 참조한다.</p>
- * <p>기본 키(id), 생성일(createdAt), 수정일(updatedAt) 필드는 {@link BaseEntity} 에서 상속받는다.</p>
+ * <p>
+ *     기본 키(id), 생성일(createdAt), 수정일(updatedAt) 필드는 {@link BaseEntity} 에서 상속받는다.
+ *     게시판 이름(name)은 한 번 생성되면 변경되지 않는 불변 필드로 관리된다.
+ * </p>
  *
  * @author CRISPYTYPER
  * @see BaseEntity
