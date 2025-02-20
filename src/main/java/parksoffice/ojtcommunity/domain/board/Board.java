@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import parksoffice.ojtcommunity.domain.common.BaseEntity;
 
 /**
@@ -22,9 +23,9 @@ import parksoffice.ojtcommunity.domain.common.BaseEntity;
  */
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA 엔티티는 반드시 no args 생성자를 가져야 한다. (외부에서 임의로 호출하지 못하도록 함)
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 @Table(name = "boards")
 public class Board extends BaseEntity {
 

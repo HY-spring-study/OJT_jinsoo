@@ -1,7 +1,10 @@
 package parksoffice.ojtcommunity.domain.common;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +24,8 @@ import java.time.LocalDateTime;
  */
 @MappedSuperclass // 이 클래스를 직접 테이블로 만들지 않고, 자식 엔티티가 필드만 상속받도록 함
 @Getter
+@SuperBuilder  // 상속 관계에서도 빌더를 사용할 수 있도록 함
+@NoArgsConstructor(access = AccessLevel.PROTECTED) // JPA와 @SuperBuilder 사용을 위해 기본 생성자가 필요함
 public abstract class BaseEntity { // 공통 필드를 가진 부모 클래스. abstract class로, 독립적으로 객체 생성 불가능
 
     /**
