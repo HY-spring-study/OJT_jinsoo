@@ -33,6 +33,14 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Optional<Board> findByName(String name);
 
     /**
+     * 게시판 코드(code)가 정확하게 일치하는 Board 엔티티를 반환한다.
+     *
+     * @param code 검색할 게시판 코드
+     * @return 해당 코드를 가진 Board 엔티티 (Optional)
+     */
+    Optional<Board> findByCode(String code);
+
+    /**
      * 게시판 이름(name)에 특정 키워드가 포함된 Board 엔티티 목록을 반환한다.
      *
      * @param keyword 검색할 키워드
@@ -47,4 +55,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
      * @return 키워드를 포함하는 게시판 설명을 가진 Board 목록
      */
     List<Board> findByDescriptionContaining(String keyword);
+
+    /**
+     * 게시판 코드(code)에 특정 키워드가 포함된 Board 엔티티 목록을 반환한다.
+     *
+     * @param keyword 검색할 키워드
+     * @return 키워드를 포함하는 게시판 코드를 가진 Board 목록
+     */
+    List<Board> findByCodeContaining(String keyword);
 }

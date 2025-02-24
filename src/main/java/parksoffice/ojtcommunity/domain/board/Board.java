@@ -15,7 +15,8 @@ import parksoffice.ojtcommunity.domain.common.BaseEntity;
  * <p>이 엔티티는 단방향 관계로 구현되어 있으며, 게시글(Post) 엔티티에서 {@code @ManyToOne}으로 Board를 참조한다.</p>
  * <p>
  *     기본 키(id), 생성일(createdAt), 수정일(updatedAt) 필드는 {@link BaseEntity} 에서 상속받는다.
- *     게시판 이름(name)은 한 번 생성되면 변경되지 않는 불변 필드로 관리된다.
+ *     게시판 이름(name)은 한 번 생성되면 변경되지 않는 불변 필드로 관리되며,
+ *     별도의 식별 코드(code)는 쿼리 파라미터 등에서 사용하기 위해 도입된다.
  * </p>
  *
  * @author CRISPYTYPER
@@ -31,11 +32,24 @@ public class Board extends BaseEntity {
 
     /**
      * 게시판 이름
-     * <p>자유게시판, 유머게시판 등 고유한 이름을 가진다.</p>
+     * <p>
+     *     예: "자기소개(남)", "자기소개(여)"
+     * </p>
      */
     @NotBlank(message = "게시판 이름은 필수입니다.")
     @Column(unique = true, nullable = false)
     private String name;
+
+    /**
+     * 게시판 코드
+     * <p>
+     *     URL이나 쿼리 파라미터에서 사용하기 위한 식별자로, 예: "male", "female"
+     *     한 번 생성되면 변경되지 않는 불변 필드로 관리된다.
+     * </p>
+     */
+    @NotBlank(message = "게시판 코드는 필수입니다.")
+    @Column(unique = true, nullable = false)
+    private String code;
 
     /**
      * 게시판 설명
