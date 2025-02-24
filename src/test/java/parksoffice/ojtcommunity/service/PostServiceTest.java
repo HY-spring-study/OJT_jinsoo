@@ -292,4 +292,17 @@ public class PostServiceTest {
         verify(postRepository, never()).save(any(Post.class));
     }
 
+    /**
+     * 게시글이 존재하지 않는 경우 PostNotFoundException을 발생시킨다.
+     */
+    @Test
+    void testRecommendPost_PostNotFound() {
+        // given: 게시글이 존재하지 않음을 시뮬레이션
+        when(postRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // then: 추천 처리 시 PostNotFoundException 발생 검증
+        assertThrows(PostNotFoundException.class, () -> postService.recommendPost(1L, 2L));
+        verify(postRepository, times(1)).findById(1L);
+        verify(postRecommendationRepository, never()).existsByPostIdAndMemberId(anyLong(), anyLong());
+    }
 }
