@@ -180,5 +180,21 @@ public class PostServiceTest {
         verify(postRepository, times(1)).save(existingPost);
     }
 
+    /**
+     * 게시글 업데이트 시, 해당 게시글이 없으면 PostNotFoundException을 발생시킨다.
+     */
+    @Test
+    void testUpdatePost_NotFound() {
+        // given: 게시글 조회 결과가 빈 Optional
+        when(postRepository.findById(1L)).thenReturn(Optional.empty());
+
+        UpdatePostDto updatePostDto = new UpdatePostDto();
+        updatePostDto.setTitle("New Title");
+        updatePostDto.setContent("New Content");
+
+        // then: PostNotFoundException 발생 검증
+        assertThrows(PostNotFoundException.class, () -> postService.updatePost(1L, updatePostDto));
+        verify(postRepository, times(1)).findById(1L);
+    }
 
 }
