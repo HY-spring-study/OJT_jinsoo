@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
 import parksoffice.ojtcommunity.domain.member.Member;
+import parksoffice.ojtcommunity.exception.PostNotFoundException;
 import parksoffice.ojtcommunity.repository.board.PostRecommendationRepository;
 import parksoffice.ojtcommunity.repository.board.PostRepository;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
@@ -86,6 +87,19 @@ public class PostServiceTest {
         // then: 반환된 게시글 검증
         assertNotNull(result);
         assertEquals("Test Title", result.getTitle());
+        verify(postRepository, times(1)).findById(1L);
+    }
+
+    /**
+     * 게시글 ID 조회 시, 게시글이 없으면 PostNotFoundException 발생한다.
+     */
+    @Test
+    void testGetPostById_NotFound() {
+        // given: 게시글 조회 결과가 빈 Optional
+        when(postRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // then: PostNotFoundException 발생 검증
+        assertThrows(PostNotFoundException.class, () -> postService.getPostById(1L));
         verify(postRepository, times(1)).findById(1L);
     }
 
