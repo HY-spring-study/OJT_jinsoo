@@ -1,6 +1,7 @@
 package parksoffice.ojtcommunity.repository.board;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import parksoffice.ojtcommunity.domain.board.Post;
 
 import java.time.LocalDateTime;
@@ -73,8 +74,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     /**
      * 추천수가 높은 게시글부터 순서대로 게시글 목록을 반환한다.
      *
+     * <p>
+     *     추천수는 Post 엔티티의 추천 정보(recommendations) 컬렉션의 크기로 계산된다.
+     *     LEFT JOIN과 GROUP BY를 사용하여 추천 수 기준으로 정렬한다.
+     * </p>
+     *
      * @return 추천수가 많은 게시글부터 정렬된 게시글 목록
      */
+    @Query("SELECT p FROM Post p LEFT JOIN p.recommendations r GROUP BY p ORDER BY COUNT(r) DESC")
     List<Post> findAllByOrderByRecommendationCountDesc();
 
     /**
