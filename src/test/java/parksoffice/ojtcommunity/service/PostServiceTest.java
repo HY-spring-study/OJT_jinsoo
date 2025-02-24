@@ -14,6 +14,7 @@ import parksoffice.ojtcommunity.repository.board.PostRepository;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -111,9 +112,9 @@ public class PostServiceTest {
     @Test
     void testSearchPostByTitle() {
         // given: "Test"를 포함하는 제목의 게시글 리스트 생성
-        Post post1 = Post.builder().title("Test Title One").content("Content 1").build();
-        Post post2 = Post.builder().title("Another Test Title").content("Content 2").build();
-        List<Post> posts = Arrays.asList(post1, post2);
+        Post post1 = Post.builder().title("Test Title One").content("Content 1").build(); // 검색 조건 충족
+        Post post2 = Post.builder().title("Another Title").content("Content 2").build(); // 검색 조건 미충족
+        List<Post> posts = Collections.singletonList(post1); // 불변 리스트(요소 1개)로, 요소를 추가/삭제할 필요가 없을 때 사용하면 좋음
         when(postRepository.findByTitleContaining("Test")).thenReturn(posts);
 
         // when: searchPostsByTitle 호출
@@ -121,8 +122,25 @@ public class PostServiceTest {
 
         // then: 결과 검증
         assertNotNull(result);
-        assertEquals(2, result.size());
+        assertEquals(1, result.size());
         verify(postRepository, times(1)).findByTitleContaining("Test");
+    }
+
+    @Test
+    void testSearchPostByContent() {
+        // given: "Sample"을 포함하는 내용의 게시글 리스트 생성
+        Post post1 = Post.builder().title("Title").content("Sample Content").build(); // 검색 조건 충족
+        Post post2 = Post.builder().title("Title").content("Simple Content").build(); // 검색 조건 미충족
+
+        when(postRepository.findByContentContaining("Sample")).thenReturn(Collections.singletonList(post1)); // 불변 리스트(요소 1개)로, 요소를 추가/삭제할 필요가 없을 때 사용하면 좋음
+
+        // when: searchPostByContent 호출
+        List<Post> result = postService.searchPostsByContent("Sample");
+
+        // then: 결과 리스트 검증
+        assertNotNull(result);
+        assertEquals(1, result.size());
+        verify(postRepository, times(1)).findByContentContaining("Sample");
     }
 
 }
