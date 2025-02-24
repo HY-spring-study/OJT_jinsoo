@@ -8,6 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
 import parksoffice.ojtcommunity.domain.member.Member;
+import parksoffice.ojtcommunity.dto.board.UpdatePostDto;
 import parksoffice.ojtcommunity.exception.PostNotFoundException;
 import parksoffice.ojtcommunity.repository.board.PostRecommendationRepository;
 import parksoffice.ojtcommunity.repository.board.PostRepository;
@@ -126,6 +127,9 @@ public class PostServiceTest {
         verify(postRepository, times(1)).findByTitleContaining("Test");
     }
 
+    /**
+     * 게시글 내용 검색 시, 키워드를 포함하는 게시글 목록을 반환한다.
+     */
     @Test
     void testSearchPostByContent() {
         // given: "Sample"을 포함하는 내용의 게시글 리스트 생성
@@ -142,5 +146,39 @@ public class PostServiceTest {
         assertEquals(1, result.size());
         verify(postRepository, times(1)).findByContentContaining("Sample");
     }
+
+    /**
+     * 게시글 업데이트가 성공적으로 수행되어 제목과 본문이 변경된다.
+     */
+    @Test
+    void testUpdatePost_Success() {
+        // given:
+        // 기존 게시글 객체 생성
+        Post existingPost = Post.builder()
+                .title("Old Title")
+                .content("Old Content")
+                .author(Member.builder().id(1L).username("author").password("pass").build())
+                .board(Board.builder().name("Free Board").description("자유게시판").build())
+                .build();
+        when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
+
+        // 업데이트용 DTO 생성
+        UpdatePostDto updatePostDto = new UpdatePostDto();
+        updatePostDto.setTitle("New Title");
+        updatePostDto.setContent("New Content");
+
+        when(postRepository.save(existingPost)).thenReturn(existingPost);
+
+        // when: updatePost 호출
+        Post updatedPost = postService.updatePost(1L, updatePostDto);
+
+        // then: 업데이트 된 게시글 검증
+        assertNotNull(updatedPost);
+        assertEquals("New Title", updatedPost.getTitle());
+        assertEquals("New Content", updatedPost.getContent());
+        verify(postRepository, times(1)).findById(1L);
+        verify(postRepository, times(1)).save(existingPost);
+    }
+
 
 }
