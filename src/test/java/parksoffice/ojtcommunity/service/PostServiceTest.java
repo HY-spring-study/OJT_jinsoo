@@ -9,6 +9,7 @@ import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
 import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.dto.board.UpdatePostDto;
+import parksoffice.ojtcommunity.exception.AlreadyRecommendedException;
 import parksoffice.ojtcommunity.exception.PostNotFoundException;
 import parksoffice.ojtcommunity.repository.board.PostRecommendationRepository;
 import parksoffice.ojtcommunity.repository.board.PostRepository;
@@ -262,6 +263,33 @@ public class PostServiceTest {
 
         // 게시글의 추천 컬렉션에 추천 객체가 추가되었음을 확인 (추천 수가 1이어야 함)
         assertEquals(1, post.getRecommendations().size());
+    }
+
+    /**
+     * 같은 회원이 이미 추천한 경우 AlreadyRecommendedException을 발생시킨다.
+     */
+    @Test
+    void testRecommendPost_AlreadyRecommended() {
+        // given: 게시글 객체 생성
+        Board board = Board.builder().name("Free Board").description("자유게시판").build();
+        Member author = Member.builder().id(1L).username("author").password("pass").build();
+        Post post = Post.builder()
+                .title("Test Title")
+                .content("Test Content")
+                .author(author)
+                .board(board)
+                .build();
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        // 중복 추천 상황: 이미 추천한 회원이 있음
+        when(postRecommendationRepository.existsByPostIdAndMemberId(1L, 2L)).thenReturn(true);
+
+        // then: 추천 처리 시 AlreadyRecommendedException 발생 검증
+        assertThrows(AlreadyRecommendedException.class, () -> postService.recommendPost(1L, 2L));
+        verify(postRepository, times(1)).findById(1L);
+        verify(postRecommendationRepository, times(1)).existsByPostIdAndMemberId(1L, 2L);
+        verify(memberRepository, never()).getReferenceById(anyLong());
+        verify(postRepository, never()).save(any(Post.class));
     }
 
 }
