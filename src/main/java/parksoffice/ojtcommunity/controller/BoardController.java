@@ -37,4 +37,22 @@ public class BoardController {
         log.info("Listing posts for board code: {}", boardCode);
         return "board/lists";
     }
+
+    @GetMapping("/view")
+    public String viewBoardPost(@RequestParam("id") String boardCode,
+                                @RequestParam("no") Long postId,
+                                Model model) {
+        Post post = postService.getPostById(postId);
+        // 조회된 게시글의 Board 코드가 요청된 board 코드가 일치하는지 확인한다.
+        if(!post.getBoard().getCode().equalsIgnoreCase(boardCode)) {
+            log.warn("Board code mismatch: post board code {} vs request board code {}",
+                    post.getBoard().getCode(), boardCode);
+            // 오류 메시지를 URL 파라미터로 전달하며, 오류 페이지로 리다이렉트
+            return "redirect:/error?message=Board%20code%20mismatch";
+        }
+        model.addAttribute("post", post);
+        model.addAttribute("boardCode", boardCode);
+        log.info("Viewing post with id: {} on board code: {}", postId, boardCode);
+        return "board/view";
+    }
 }
