@@ -197,4 +197,20 @@ public class PostServiceTest {
         verify(postRepository, times(1)).findById(1L);
     }
 
+    /**
+     * 게시글 삭제가 성공적으로 수행된다.
+     */
+    @Test
+    void testDeletePostById_Success() {
+        // given: 게시글 존재함을 시뮬레이션
+        when(postRepository.existsById(1L)).thenReturn(true);
+
+        // when: deletePostById 호출
+        postService.deletePostById(1L);
+
+        // then: 존재 여부 확인 및 삭제 호출 검증
+        verify(postRepository, times(1)).existsById(1L);
+        verify(postRepository, times(1)).deleteById(1L);
+    }
+
 }
