@@ -46,6 +46,7 @@ public class PostServiceTest {
         // given: 신규 게시글 객체 생성
         Board board = Board.builder()
                 .name("Free Board")
+                .code("freeboard")
                 .description("자유게시판")
                 .build();
         Member author = Member.builder()
@@ -81,7 +82,7 @@ public class PostServiceTest {
                 .title("Test Title")
                 .content("Test Content")
                 .author(Member.builder().id(1L).username("author").password("pass").build())
-                .board(Board.builder().name("Free Board").description("자유게시판").build())
+                .board(Board.builder().name("Free Board").code("freeboard").description("자유게시판").build())
                 .build();
 
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
@@ -159,7 +160,7 @@ public class PostServiceTest {
                 .title("Old Title")
                 .content("Old Content")
                 .author(Member.builder().id(1L).username("author").password("pass").build())
-                .board(Board.builder().name("Free Board").description("자유게시판").build())
+                .board(Board.builder().name("Free Board").code("freeboard").description("자유게시판").build())
                 .build();
         when(postRepository.findById(1L)).thenReturn(Optional.of(existingPost));
 
@@ -235,7 +236,7 @@ public class PostServiceTest {
     void testRecommendPost_Success() {
         // given:
         // 게시글 객체 생성
-        Board board = Board.builder().name("Free Board").description("자유게시판").build();
+        Board board = Board.builder().name("Free Board").code("freeboard").description("자유게시판").build();
         Member author = Member.builder().id(1L).username("author").password("pass").build();
         Post post = Post.builder()
                 .title("Test Title")
@@ -271,7 +272,7 @@ public class PostServiceTest {
     @Test
     void testRecommendPost_AlreadyRecommended() {
         // given: 게시글 객체 생성
-        Board board = Board.builder().name("Free Board").description("자유게시판").build();
+        Board board = Board.builder().name("Free Board").code("freeboard").description("자유게시판").build();
         Member author = Member.builder().id(1L).username("author").password("pass").build();
         Post post = Post.builder()
                 .title("Test Title")
