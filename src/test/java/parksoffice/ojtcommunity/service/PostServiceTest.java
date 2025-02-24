@@ -13,6 +13,8 @@ import parksoffice.ojtcommunity.repository.board.PostRecommendationRepository;
 import parksoffice.ojtcommunity.repository.board.PostRepository;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -101,6 +103,26 @@ public class PostServiceTest {
         // then: PostNotFoundException 발생 검증
         assertThrows(PostNotFoundException.class, () -> postService.getPostById(1L));
         verify(postRepository, times(1)).findById(1L);
+    }
+
+    /**
+     * 게시글 제목 검색 시, 키워드를 포함하는 게시글 목록을 반환한다.
+     */
+    @Test
+    void testSearchPostByTitle() {
+        // given: "Test"를 포함하는 제목의 게시글 리스트 생성
+        Post post1 = Post.builder().title("Test Title One").content("Content 1").build();
+        Post post2 = Post.builder().title("Another Test Title").content("Content 2").build();
+        List<Post> posts = Arrays.asList(post1, post2);
+        when(postRepository.findByTitleContaining("Test")).thenReturn(posts);
+
+        // when: searchPostsByTitle 호출
+        List<Post> result = postService.searchPostsByTitle("Test");
+
+        // then: 결과 검증
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(postRepository, times(1)).findByTitleContaining("Test");
     }
 
 }
