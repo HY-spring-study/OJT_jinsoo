@@ -27,7 +27,7 @@ public class DataInitializer {
                         .build();
                 Board femaleBoard = Board.builder()
                         .name("자기소개(여)")
-                        .description("남자가 본인을 소개하는 게시판")
+                        .description("여자가 본인을 소개하는 게시판")
                         .build();
 
                 boardRepository.save(maleBoard);
