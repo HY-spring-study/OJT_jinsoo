@@ -213,4 +213,18 @@ public class PostServiceTest {
         verify(postRepository, times(1)).deleteById(1L);
     }
 
+    /**
+     * 게시글 삭제 시, 게시글이 존재하지 않으면 PostNotFoundException을 발생시킨다.
+     */
+    @Test
+    void testDeletePostById_NotFound() {
+        // given: 게시글이 존재하지 않음을 시뮬레이션
+        when(postRepository.existsById(1L)).thenReturn(false);
+
+        // then: PostNotFoundException 발생 검증
+        assertThrows(PostNotFoundException.class, () -> postService.deletePostById(1L));
+        verify(postRepository, times(1)).existsById(1L);
+        verify(postRepository, never()).deleteById(anyLong());
+    }
+
 }
