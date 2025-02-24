@@ -227,4 +227,41 @@ public class PostServiceTest {
         verify(postRepository, never()).deleteById(anyLong());
     }
 
+    /**
+     * 게시글 추천이 성공적으로 처리되어, 해당 게시글의 추천 컬렉션에 추천 객체가 추가된다.
+     */
+    @Test
+    void testRecommendPost_Success() {
+        // given:
+        // 게시글 객체 생성
+        Board board = Board.builder().name("Free Board").description("자유게시판").build();
+        Member author = Member.builder().id(1L).username("author").password("pass").build();
+        Post post = Post.builder()
+                .title("Test Title")
+                .content("Test Content")
+                .author(author)
+                .board(board)
+                .build();
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+
+        // 중복 추천이 없는 상황을 시뮬레이션
+        when(postRecommendationRepository.existsByPostIdAndMemberId(1L, 2L)).thenReturn(false);
+
+        // memberRepository.getReferenceById()를 통한 회원 참조(프록시) 획득
+        Member memberRef = Member.builder().id(2L).build();
+        when(memberRepository.getReferenceById(2L)).thenReturn(memberRef);
+
+        // when: 추천 처리 메서드 호출
+        postService.recommendPost(1L, 2L);
+
+        // then: 게시글 조회, 중복 추천 확인, 회원 참조 획득, 그리고 게시글 저장이 올바르게 호출되었는지 검증
+        verify(postRepository, times(1)).findById(1L);
+        verify(postRecommendationRepository, times(1)).existsByPostIdAndMemberId(1L, 2L);
+        verify(memberRepository, times(1)).getReferenceById(2L);
+        verify(postRepository, times(1)).save(post);
+
+        // 게시글의 추천 컬렉션에 추천 객체가 추가되었음을 확인 (추천 수가 1이어야 함)
+        assertEquals(1, post.getRecommendations().size());
+    }
+
 }
