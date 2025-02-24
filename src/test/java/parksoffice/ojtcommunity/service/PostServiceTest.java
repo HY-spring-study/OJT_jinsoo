@@ -167,7 +167,7 @@ public class PostServiceTest {
      * 게시글 내용 검색 시, 키워드를 포함하는 게시글 목록을 반환한다.
      */
     @Test
-    void testSearchPostByContent() {
+    void testSearchPostsByContent() {
         // given: "Sample"을 포함하는 내용의 게시글 리스트 생성
         Post post1 = Post.builder().title("Title").content("Sample Content").build(); // 검색 조건 충족
         Post post2 = Post.builder().title("Title").content("Simple Content").build(); // 검색 조건 미충족
