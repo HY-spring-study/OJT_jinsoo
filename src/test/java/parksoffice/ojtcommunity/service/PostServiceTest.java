@@ -130,6 +130,40 @@ public class PostServiceTest {
     }
 
     /**
+     * 게시판 코드(board.code)를 기준으로 게시글 목록을 조회한다.
+     * <p>
+     *     'male' 게시판 코드에 해당하는 게시글 목록이 올바르게 반환되는지 검증한다.
+     * </p>
+     *
+     * @see PostService#getPostsByBoardCode(String)
+     */
+    @Test
+    void testGetPostsByBoardCode_Success() {
+        // given: 게시판 코드와 해당 게시판에 속한 게시글 목록을 준비한다.
+        String boardCode = "male";
+        Post post1 = Post.builder()
+                .title("Title 1")
+                .content("Content 1")
+                .build();
+        Post post2 = Post.builder()
+                .title("Title 2")
+                .content("Content 2")
+                .build();
+        List<Post> expectedPosts = Arrays.asList(post1, post2);
+
+        // Repository의 메서드 호출 시 준비한 목록을 반환하도록 설정한다.
+        when(postRepository.findByBoard_Code(boardCode)).thenReturn(expectedPosts);
+
+        // when: boardCode에 해당하는 게시글 목록을 조회한다.
+        List<Post> result = postService.getPostsByBoardCode(boardCode);
+
+        // then: 반환된 결과가 null이 아니고, 예상한 크기와 내용인지 검증한다.
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        verify(postRepository, times(1)).findByBoard_Code(boardCode);
+    }
+
+    /**
      * 게시글 내용 검색 시, 키워드를 포함하는 게시글 목록을 반환한다.
      */
     @Test

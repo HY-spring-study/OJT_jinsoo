@@ -34,6 +34,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findByTitleContaining(String keyword);
 
     /**
+     * 게시판 코드(board.code)가 정확하게 일치하는 게시글 목록을 반환한다.
+     *
+     * @param code 게시판 코드 (예: "male", "female")
+     * @return 해당 게시판 코드에 속한 게시글 목록
+     */
+    List<Post> findByBoard_Code(String code);
+
+    /**
      * 본문에 특정 키워드가 포함된 게시글 목록을 반환한다.
      *
      * @param keyword 검색 키워드

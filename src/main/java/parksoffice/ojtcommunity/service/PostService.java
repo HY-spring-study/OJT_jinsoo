@@ -54,6 +54,17 @@ public class PostService {
     }
 
     /**
+     * 게시판 코드(board.code)를 기준으로 게시글 목록을 조회한다.
+     *
+     * @param boardCode 게시판 코드 (예: "male", "female")
+     * @return 해당 게시판 코드에 속한 게시글 목록
+     */
+    @Transactional(readOnly = true)
+    public List<Post> getPostsByBoardCode(String boardCode) {
+        return postRepository.findByBoard_Code(boardCode);
+    }
+
+    /**
      * 게시글 제목에 특정 키워드가 포함된 게시글 목록을 조회
      * <p>
      *     검색 결과가 없을 경우 빈 리스트를 반환한다.
@@ -150,5 +161,6 @@ public class PostService {
         // 게시글을 저장한다. cascade 옵션에 의해 Post의 자식에 해당하는 추천 정보도 함께 저장된다.
         postRepository.save(post);
     }
+
 
 }
