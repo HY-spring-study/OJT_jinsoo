@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 2em; }
+        .error-container { border: 1px solid #ccc; padding: 1em; background-color: #f8d7da; color: #721c24; }
+        a { text-decoration: none; color: #007bff; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+<div class="error-container">
+    <h1>Error Occurred</h1>
+    <p th:text="${param.message}">An unexpected error occurred.</p>
+    <p>
+        <a th:href="@{/}">Go back to Home</a>
+    </p>
+</div>
+</body>
+</html>
