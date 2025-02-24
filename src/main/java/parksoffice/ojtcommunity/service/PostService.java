@@ -93,6 +93,19 @@ public class PostService {
     }
 
     /**
+     * 모든 게시글을 최신 순으로 조회
+     * <p>
+     *     게시글이 없는 경우 빈 리스트를 반환한다.
+     * </p>
+     *
+     * @return 생성일 기준 내림차순(최신 순)으로 정렬된 게시글 목록
+     */
+    @Transactional(readOnly = true)
+    public List<Post> getAllPosts() {
+        return postRepository.findAllByOrderByCreatedAtDesc();
+    }
+
+    /**
      * 게시글 정보를 업데이트한다.
      * 주어진 게시글 ID로 기존 게시글을 조회한 후, 제목과 본문을 업데이트한다.
      * 만약 해당 게시글이 존재하지 않으면 PostNotFoundException을 발생시킨다.
