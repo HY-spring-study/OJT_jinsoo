@@ -7,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
 import parksoffice.ojtcommunity.dto.board.UpdatePostDto;
+import parksoffice.ojtcommunity.service.BoardService;
 import parksoffice.ojtcommunity.service.PostService;
 
 import java.util.List;
@@ -20,6 +22,7 @@ import java.util.List;
 public class BoardController {
 
     private final PostService postService;
+    private final BoardService boardService;
 
     /**
      * 게시판 코드에 해당하는 게시글 목록을 조회하여 "board/lists" 뷰를 반환한다.
@@ -31,10 +34,12 @@ public class BoardController {
      */
     @GetMapping("/lists")
     public String listBoardPosts(@RequestParam("id") String boardCode, Model model) {
+        // Board 정보를 별도로 조회
+        Board board = boardService.getBoardByCode(boardCode);
         List<Post> posts = postService.getPostsByBoardCode(boardCode);
         model.addAttribute("posts", posts);
-        model.addAttribute("boardCode", boardCode);
-        log.info("Listing posts for board code: {}", boardCode);
+        model.addAttribute("board", board);
+        log.info("Listing posts for board: {}", board.getName());
         return "board/lists";
     }
 
