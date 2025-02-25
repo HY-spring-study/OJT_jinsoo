@@ -44,7 +44,7 @@ public class MemberController {
      *
      * @param member 등록할 회원 엔티티 (폼 데이터 바인딩)
      * @param bindingResult 유효성 검증 결과
-     * @return 메인 페이지로 리다이렉트 또는 가입 폼 뷰 이름
+     * @return 로그인 페이지로 리다이렉트 또는 가입 폼 뷰 이름
      */
     @PostMapping("/new")
     public String registerMember(@ModelAttribute("member") @Valid Member member,
@@ -55,8 +55,8 @@ public class MemberController {
         }
         memberService.registerMember(member);
         log.info("Registered new member with username: {}", member.getUsername());
-        // 회원가입 성공 후 메인 페이지("/")로 리다이렉트
-        return "redirect:/";
+        // 회원가입 성공 후 로그인 페이지("/members/login")로 리다이렉트
+        return "redirect:/members/login";
     }
 
     /**
