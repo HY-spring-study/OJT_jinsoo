@@ -38,6 +38,15 @@ public class BoardController {
         return "board/lists";
     }
 
+    /**
+     * 특정 게시판과 게시글 번호에 해당하는 게시글 상세 정보를 조회하여 "board/view" 뷰를 반환한다.
+     * URL 예시: /board/view/?id=male&no=6388256
+     *
+     * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
+     * @param postId 쿼리 파라미터 'no'에 해당하는 게시글 번호
+     * @param model Thymeleaf 모델 객체
+     * @return 게시글 상세 뷰 이름
+     */
     @GetMapping("/view")
     public String viewBoardPost(@RequestParam("id") String boardCode,
                                 @RequestParam("no") Long postId,
@@ -100,10 +109,10 @@ public class BoardController {
      * 게시글 수정 폼을 표시하는 "board/edit" 뷰를 반환한다.
      * URL 예시: /board/edit/?id=male&no=6388256
      *
-     * @param boardCode
-     * @param postId
-     * @param model
-     * @return
+     * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
+     * @param postId 쿼리 파라미터 'no'에 해당하는 게시글 번호
+     * @param model Thymeleaf 모델 객체
+     * @return 게시글 수정 폼 뷰 이름
      */
     @GetMapping("/edit")
     public String showEditForm(@RequestParam("id") String boardCode,
@@ -120,6 +129,17 @@ public class BoardController {
         return "board/edit";
     }
 
+    /**
+     * 게시글 수정 요청을 처리한다.
+     * 유효성 검증 실패 시 수정 폼으로 되돌아간다.
+     * URL 예시: /board/edit/?id=male&no=6388256
+     *
+     * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
+     * @param postId 쿼리 파라미터 'no'에 해당하는 게시글 번호
+     * @param updatePostDto 수정할 게시글 데이터 (제목과 본문)
+     * @param bindingResult 유효성 검증 결과
+     * @return 게시글 상세 페이지로 리다이렉트 또는 수정 폼 뷰 이름
+     */
     @PostMapping("/edit")
     public String updatePost(@RequestParam("id") String boardCode,
                              @RequestParam("no") Long postId,
