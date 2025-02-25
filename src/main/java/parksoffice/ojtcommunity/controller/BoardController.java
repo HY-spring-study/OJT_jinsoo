@@ -66,7 +66,7 @@ public class BoardController {
     }
 
     /**
-     * 신규 게시글 작성 폼을 표시하는 "board/create" 뷰를 반환한다.
+     * 신규 게시글 작성 폼을 표시하는 "board/createPost" 뷰를 반환한다.
      * URL 예시: /board/new/?id=male
      *
      * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
@@ -79,7 +79,7 @@ public class BoardController {
         model.addAttribute("post", post);
         model.addAttribute("boardCode", boardCode);
         log.info("Displaying create post form for board code: {}", boardCode);
-        return "board/create";
+        return "board/createPost";
     }
 
     /**
@@ -98,7 +98,7 @@ public class BoardController {
                              BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.warn("Post creation failed for board code: {} due to validation errors", boardCode);
-            return "board/create";
+            return "createPost";
         }
         postService.registerPost(post);
         log.info("Created post with title: {} for board code: {}", post.getTitle(), boardCode);
