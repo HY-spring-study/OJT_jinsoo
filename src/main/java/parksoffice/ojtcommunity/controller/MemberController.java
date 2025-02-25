@@ -35,6 +35,15 @@ public class MemberController {
         return "members/create";
     }
 
+    /**
+     * 회원 가입 요청을 처리한다.
+     * 유효성 검증에 실패하면 가입 폼으로 되돌아간다.
+     * 회원가입 성공 후 메인 페이지("/")로 리다이렉트한다.
+     *
+     * @param member 등록할 회원 엔티티 (폼 데이터 바인딩)
+     * @param bindingResult 유효성 검증 결과
+     * @return 메인 페이지로 리다이렉트 또는 가입 폼 뷰 이름
+     */
     @PostMapping("/new")
     public String registerMember(@ModelAttribute("member") @Valid Member member,
                                  BindingResult bindingResult) {
