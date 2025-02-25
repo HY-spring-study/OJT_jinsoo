@@ -58,9 +58,9 @@
                     <div th:if="${session.loggedInMember == null}">
                         <a class="btn btn-outline-light" th:href="@{/members/login}">로그인</a>
                     </div>
-                    <!-- 로그인한 경우 사용자 이름과 로그아웃 링크 표시 -->
+                    <!-- 로그인한 경우 사용자 이름과 로그아웃 링크 표시 (텍스트 색상을 흰색으로 적용) -->
                     <div th:if="${session.loggedInMember != null}">
-                        <span class="me-2">환영합니다, <strong th:text="${session.loggedInMember.username}">User</strong>님!</span>
+                        <span class="me-2 text-white">환영합니다, <strong th:text="${session.loggedInMember.username}">User</strong>님!</span>
                         <a class="btn btn-outline-light" th:href="@{/members/logout}">로그아웃</a>
                     </div>
                 </div>
