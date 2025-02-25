@@ -102,6 +102,20 @@ public class MemberController {
     }
 
     /**
+     * 로그아웃 요청을 처리한다.
+     * 세션을 무효화시키고, 메인 페이지("/")로 리다이렉트 한다.
+     *
+     * @param session HTTP 세션
+     * @return 메인 페이지로 리다이렉트
+     */
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        log.info("User logged out successfully");
+        return "redirect:/";
+    }
+
+    /**
      * 특정 회원의 상세 정보를 조회하여 "members/view" 뷰를 반환한다.
      *
      * @param id 조회할 회원의 식별자
