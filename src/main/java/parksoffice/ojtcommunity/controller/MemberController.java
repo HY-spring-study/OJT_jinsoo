@@ -95,7 +95,7 @@ public class MemberController {
             log.info("Member logged in: {}", member.getUsername());
             return "redirect:/";
         } catch (Exception e) {
-            bindingResult.reject("loginError", "Invalid username or password"); // 특정 에러 코드를 추가하여 폼 검증 오류를 발생시키는 역할
+            bindingResult.reject("loginError", "사용자 이름 또는 비밀번호를 확인해주세요."); // 특정 에러 코드를 추가하여 폼 검증 오류를 발생시키는 역할
             log.warn("Login failed for username: {}", loginRequestDto.getUsername());
             return "members/login";
         }
