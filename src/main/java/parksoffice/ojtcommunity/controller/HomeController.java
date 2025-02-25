@@ -1,25 +1,47 @@
 package parksoffice.ojtcommunity.controller;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import parksoffice.ojtcommunity.domain.board.Board;
+import parksoffice.ojtcommunity.service.BoardService;
+
+import java.util.List;
 
 /**
  * HomeController
  *
  * <p>
- *     루트 URL("/")에 대한 요청을 처리하며, 간단한 텍스트 응답과 로그 메시지를 출력하여 매핑이 올바르게 작동하는지 확인한다.
+ *     루트 URL("/")에 대한 요청을 처리.
  * </p>
  *
  * @author CRISPYTYPER
  */
-@RestController
+@Controller
 @Slf4j
+@RequiredArgsConstructor
 public class HomeController {
+
+    private final BoardService boardService;
+
+    /**
+     * 메인 페이지를 반환한다.
+     * <p>
+     *     전체 게시판 목록(예: "자기소개(남)", "자기소개(여)" 등)을 조회하여 모델에 추가하고,
+     *     로그인 컴포넌트와 함께 메인 페이지 뷰를 렌더링한다.
+     * </p>
+     *
+     * @param model Thymeleaf 모델 객체
+     * @return 메인 페이지 뷰 이름 ("index")
+     */
     @GetMapping("/")
-    public String home() {
-        log.info("HomeController: '/' endpoint has been accessed.");
-        return "This is the home page.";
+    public String home(Model model) {
+        List<Board> boards = boardService.getAllBoards();
+        model.addAttribute("boards", boards);
+        log.info("Loaded {} boards", boards.size());
+        return "index";
     }
 }
