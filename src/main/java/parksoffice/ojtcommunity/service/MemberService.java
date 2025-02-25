@@ -145,7 +145,17 @@ public class MemberService {
     }
 
     /**
+     * 사용자 로그인
      *
+     * <p>
+     * 주어진 username으로 회원을 조회한 후, 입력된 password와 비교하여 로그인을 수행한다.
+     * </p>
+     *
+     * @param username 로그인할 사용자 이름
+     * @param password 로그인할 사용자 비밀번호
+     * @return 로그인된 회원 엔티티
+     * @throws MemberNotFoundException 사용자 이름이 존재하지 않을 경우
+     * @throws PasswordNotCorrectException 비밀번호가 일치하지 않을 경우
      */
     @Transactional(readOnly = true)
     public Member login(String username, String password) {
