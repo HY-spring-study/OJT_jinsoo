@@ -7,6 +7,7 @@ import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.dto.member.UpdateMemberDto;
 import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.exception.MemberNotFoundException;
+import parksoffice.ojtcommunity.exception.PasswordNotCorrectException;
 import parksoffice.ojtcommunity.repository.member.MemberRepository;
 
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.Optional;
  * </ul>
  * </p>
  *
- * @author  CRISPYTYPER
+ * @author CRISPYTYPER
  */
 @Service
 @Transactional // 기본적으로 쓰기 작업에 대해 트랜잭션을 적용함.
@@ -95,7 +96,7 @@ public class MemberService {
      * 회원 정보 업데이트.
      * 회원이 존재하지 않으면 MemberNotFoundException을 발생시킨다.
      *
-     * @param id         업데이트할 회원의 식별자
+     * @param id              업데이트할 회원의 식별자
      * @param updateMemberDto 회원 정보 업데이트용 DTO (username, password)
      * @return 업데이트된 회원 엔티티
      * @throws MemberNotFoundException 해당 회원이 없을 경우
@@ -129,9 +130,10 @@ public class MemberService {
      * 중복 회원 검증
      *
      * <p>
-     *     주어진 회원 객체의 username으로 회원을 검색하여,
-     *     해당 username을 가진 회원이 존재하면 DuplicateMemberException을 발생시킨다.
+     * 주어진 회원 객체의 username으로 회원을 검색하여,
+     * 해당 username을 가진 회원이 존재하면 DuplicateMemberException을 발생시킨다.
      * </p>
+     *
      * @param member 중복 검증을 수행할 회원 엔티티
      * @throws DuplicateMemberException 이미 해당 username을 가진 회원이 존재할 경우
      */
@@ -140,5 +142,18 @@ public class MemberService {
         if (foundMember.isPresent()) {
             throw new DuplicateMemberException("Already existing member with username: " + member.getUsername());
         }
+    }
+
+    /**
+     *
+     */
+    @Transactional(readOnly = true)
+    public Member login(String username, String password) {
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new MemberNotFoundException("Member not found with username: " + username));
+        if (!member.getPassword().equals(password)) {
+            throw new PasswordNotCorrectException("Password not correct");
+        }
+        return member;
     }
 }
