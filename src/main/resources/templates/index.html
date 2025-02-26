@@ -1,8 +1,10 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content}">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <body>
 <!-- 메인 콘텐츠 영역 -->
-<main class="container board-list">
+<main class="container board-list" layout:fragment="content">
     <h1 class="mb-4 text-center">게시판 목록</h1>
     <div class="row">
         <div class="col-12">
