@@ -1,0 +1,85 @@
+/* File: src/main/resources/static/css/common.css */
+
+/* 공통 body 스타일 */
+body {
+    background-color: #f8f9fa;
+}
+
+/* 공통 폼 컨테이너 스타일 */
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    margin: auto;
+}
+
+/* 페이지별 폼 컨테이너 너비 */
+.form-large { /* board/createPost 용 (최대 800px) */
+    max-width: 800px;
+    padding-top: 2rem;
+}
+
+.form-medium { /* members/create 용 (최대 500px) */
+    max-width: 500px;
+    padding-top: 2rem;
+}
+
+.form-small { /* members/login 용 (최대 400px) */
+    max-width: 400px;
+    padding-top: 2rem;
+}
+
+/* 공통 Board 목록 스타일 */
+.board-list {
+    margin-top: 2rem;
+}
+
+.board-header {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+    text-align: center;
+}
+
+.board-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.post-title a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.post-title a:hover {
+    text-decoration: underline;
+}
+
+.post-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.action-buttons {
+    text-align: right;
+    margin-bottom: 1rem;
+}
+
+/* 네비게이션 관련 스타일 */
+.navbar-custom {
+    background-color: #343a40;
+}
+.navbar-custom .navbar-brand,
+.navbar-custom .nav-link,
+.navbar-custom .btn {
+    color: #ffffff;
+}
