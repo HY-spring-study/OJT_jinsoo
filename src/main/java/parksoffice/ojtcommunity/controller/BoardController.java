@@ -96,10 +96,13 @@ public class BoardController {
         Post post = Post.builder().build();
         model.addAttribute("post", post);
         model.addAttribute("boardCode", boardCode);
+
+        Board board = boardService.getBoardByCode(boardCode);
+
         log.info("Displaying create post form for board code: {}", boardCode);
 
         // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
-        model.addAttribute("pageTitle", post.getTitle() + "-" + post.getBoard().getName());
+        model.addAttribute("pageTitle", "게시글 작성 - " + board.getName());
         model.addAttribute("pageDescription", "게시글 작성 페이지입니다.");
 
         return "board/createPost";
