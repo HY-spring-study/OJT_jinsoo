@@ -12,8 +12,6 @@ import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.dto.member.LoginRequestDto;
 import parksoffice.ojtcommunity.service.MemberService;
 
-import java.util.List;
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -33,6 +31,11 @@ public class MemberController {
         // 노-인자 생성자가 protected이므로, 빌더를 사용하여 새로운 Member 인스턴스를 생성한다.
         Member member = Member.builder().build();
         model.addAttribute("member", member);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", "회원가입 페이지");
+        model.addAttribute("pageDescription", "회원가입 페이지입니다.");
+
         log.info("Displaying member registration form");
         return "members/create";
     }
@@ -68,6 +71,11 @@ public class MemberController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
         model.addAttribute("loginRequestDto", new LoginRequestDto());
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", "로그인 페이지");
+        model.addAttribute("pageDescription", "로그인 페이지 입니다.");
+
         log.info("Displaying login form");
         return "members/login";
     }
@@ -126,6 +134,11 @@ public class MemberController {
     public String viewMember(@PathVariable Long id, Model model) {
         Member member = memberService.getMemberById(id);
         model.addAttribute("member", member);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", member.getUsername() + "의 정보");
+        model.addAttribute("pageDescription", "특정 회원의 정보를 조회하는 페이지입니다.");
+
         log.info("Viewing member with id: {}", id);
         return "members/view";
     }

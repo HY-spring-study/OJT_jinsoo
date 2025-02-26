@@ -1,5 +1,6 @@
 package parksoffice.ojtcommunity.controller;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
+import parksoffice.ojtcommunity.domain.member.Member;
+import parksoffice.ojtcommunity.dto.board.CreatePostDto;
 import parksoffice.ojtcommunity.dto.board.UpdatePostDto;
 import parksoffice.ojtcommunity.service.BoardService;
 import parksoffice.ojtcommunity.service.PostService;
@@ -39,6 +42,11 @@ public class BoardController {
         List<Post> posts = postService.getPostsByBoardCode(boardCode);
         model.addAttribute("posts", posts);
         model.addAttribute("board", board);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", board.getName());
+        model.addAttribute("pageDescription", board.getDescription());
+
         log.info("Listing posts for board: {}", board.getName());
         return "board/lists";
     }
@@ -66,6 +74,11 @@ public class BoardController {
         }
         model.addAttribute("post", post);
         model.addAttribute("boardCode", boardCode);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", post.getTitle() + "-" + post.getBoard().getName());
+        model.addAttribute("pageDescription", "게시글 상세 페이지입니다.");
+
         log.info("Viewing post with id: {} on board code: {}", postId, boardCode);
         return "board/view";
     }
@@ -84,6 +97,11 @@ public class BoardController {
         model.addAttribute("post", post);
         model.addAttribute("boardCode", boardCode);
         log.info("Displaying create post form for board code: {}", boardCode);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", post.getTitle() + "-" + post.getBoard().getName());
+        model.addAttribute("pageDescription", "게시글 작성 페이지입니다.");
+
         return "board/createPost";
     }
 
@@ -93,18 +111,39 @@ public class BoardController {
      * URL 예시: /board/new/?id=male
      *
      * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
-     * @param post 작성할 게시글 엔티티 (폼 데이터를 바인딩)
+     * @param createPostDto 작성할 게시글 DTO (폼 데이터를 바인딩)
      * @param bindingResult 유효성 검증 결과
      * @return 게시글 목록 페이지 리다이렉트 또는 작성 폼 뷰 이름
      */
     @PostMapping("/new")
     public String createPost(@RequestParam("id") String boardCode,
-                             @ModelAttribute("post") @Valid Post post,
-                             BindingResult bindingResult) {
+                             @ModelAttribute("createPostDto") @Valid CreatePostDto createPostDto,
+                             BindingResult bindingResult,
+                             HttpSession session) {
         if (bindingResult.hasErrors()) {
             log.warn("Post creation failed for board code: {} due to validation errors", boardCode);
-            return "createPost";
+            return "board/createPost";
         }
+
+        // 세션에서 로그인한 회원 정보를 가져온다.
+        Member author = (Member) session.getAttribute("loggedInMember");
+        if (author == null) {
+            // 로그인하지 않은 상태라면 로그인 페이지로 리다이렉트
+            log.warn("Member not logged in");
+            return "redirect:/members/login";
+        }
+
+        // BoardService를 통해 boardCode에 해당하는 Board 객체를 조회한다.
+        Board board = boardService.getBoardByCode(boardCode);
+
+        // CreatePostDto를 Post엔티티로 변환하면서, author와 board를 설정한다.
+        Post post = Post.builder()
+                .title(createPostDto.getTitle())
+                .content(createPostDto.getContent())
+                .author(author)
+                .board(board)
+                .build();
+
         postService.registerPost(post);
         log.info("Created post with title: {} for board code: {}", post.getTitle(), boardCode);
         return "redirect:/board/lists?id=" + boardCode;
@@ -130,6 +169,11 @@ public class BoardController {
         model.addAttribute("postId", postId);
         model.addAttribute("updatePostDto", updatePostDto);
         model.addAttribute("boardCode", boardCode);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", post.getTitle() + "-" + post.getBoard().getName());
+        model.addAttribute("pageDescription", "게시글 수정 페이지입니다.");
+
         log.info("Displaying edit form for post id: {} on board code: {}", postId, boardCode);
         return "board/edit";
     }

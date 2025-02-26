@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.service.BoardService;
 
@@ -41,6 +40,11 @@ public class HomeController {
     public String home(Model model) {
         List<Board> boards = boardService.getAllBoards();
         model.addAttribute("boards", boards);
+
+        // Thymeleaf layout의 head 영역에 전달할 동적 변수들 추가
+        model.addAttribute("pageTitle", "메인 페이지");
+        model.addAttribute("pageDescription", "메인 페이지입니다.");
+
         log.info("Loaded {} boards", boards.size());
         return "index";
     }
