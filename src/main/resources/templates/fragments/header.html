@@ -9,19 +9,17 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarContent">
-                <!-- 좌측 네비게이션 -->
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/}">Home</a>
                     </li>
                 </ul>
-                <!-- 우측 로그인/사용자 정보 영역 -->
                 <div class="d-flex">
                     <div th:if="${session.loggedInMember == null}">
                         <a class="btn btn-outline-light" th:href="@{/members/login}">로그인</a>
                     </div>
                     <div th:if="${session.loggedInMember != null}">
-                        <span class="me-2 text-white">환영합니다, <strong th:text="${session.loggedInMember.getUsername()}">User</strong>님!</span>
+                        <span class="me-2 text-white">환영합니다, <strong th:text="${session.loggedInMember.username}">User</strong>님!</span>
                         <a class="btn btn-outline-light" th:href="@{/members/logout}">로그아웃</a>
                     </div>
                 </div>

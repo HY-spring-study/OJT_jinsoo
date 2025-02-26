@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/head :: head(${pageTitle}, ${pageDescription})"></head>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{fragments/head :: head(${pageTitle}, ${pageDescription})}">
+    <!-- 추가적으로 페이지별 head 콘텐츠를 삽입할 자리 -->
+    <div layout:insert="~{::headContent}"></div>
+</head>
 <body>
 <!-- 공통 헤더 -->
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 
-<!-- 본문 컨텐츠 영역 (개별 페이지는 이 영역만 채워 넣는다.) -->
-<div class="container" th:fragment="content">
-    <!-- 페이지별 콘텐츠가 삽입된다. -->
+<!-- 본문 콘텐츠 영역 -->
+<div class="container" layout:fragment="content">
+    <!-- 개별 페이지의 콘텐츠가 이 영역에 삽입됩니다. -->
 </div>
 
 <!-- 공통 푸터 -->
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
