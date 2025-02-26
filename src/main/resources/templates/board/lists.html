@@ -1,22 +1,27 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org" th:replace="~{layout :: content}">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
 <head>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .board-header {
-            margin-bottom: 2rem;
-            padding: 1.5rem;
-            background-color: #ffffff;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-            text-align: center;
-        }
-    </style>
+    <div layout:fragment="headContent">
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .board-header {
+                margin-bottom: 2rem;
+                padding: 1.5rem;
+                background-color: #ffffff;
+                border-radius: 0.5rem;
+                box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+                text-align: center;
+            }
+        </style>
+    </div>
 </head>
 <body>
-<div class="container mt-4">
+<!-- 본문 콘텐츠 영역을 layout의 content로 지정 -->
+<div class="container mt-4" layout:fragment="content">
     <!-- Board 정보 영역 -->
     <div class="board-header">
         <h1 th:text="${board.name}">게시판 이름</h1>
