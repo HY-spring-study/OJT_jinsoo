@@ -20,7 +20,6 @@
     </div>
 </head>
 <body>
-<!-- 본문 콘텐츠 영역을 layout의 content로 지정 -->
 <div class="container mt-4" layout:fragment="content">
     <!-- Board 정보 영역 -->
     <div class="board-header">
@@ -37,7 +36,7 @@
     <div class="row">
         <div class="col-12">
             <div th:if="${posts != null and !posts.isEmpty()}">
-                <div th:each="post : ${posts}" class="post-item">
+                <div th:each="post : ${posts}" class="board-item">
                     <div class="post-title">
                         <h4>
                             <a th:href="@{/board/view(id=${board.code}, no=${post.id})}" th:text="${post.title}">
@@ -45,8 +44,14 @@
                             </a>
                         </h4>
                     </div>
-                    <div class="post-meta text-muted">
-                        <small th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</small>
+                    <!-- 수정: d-flex를 사용하여 작성일은 왼쪽, 작성자는 오른쪽에 표시 -->
+                    <div class="post-meta d-flex justify-content-between text-muted">
+                        <small th:text="'작성일: ' + ${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">
+                            작성일: 2025-02-27 10:49
+                        </small>
+                        <small th:text="'작성자: ' + ${post.author.username}">
+                            작성자: User
+                        </small>
                     </div>
                 </div>
             </div>
