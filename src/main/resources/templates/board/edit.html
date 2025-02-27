@@ -1,0 +1,47 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <!-- 페이지별 추가 스타일(옵션) -->
+    <div layout:fragment="headContent">
+        <style>
+            .edit-form-container {
+                max-width: 800px;
+                margin: auto;
+                padding: 2rem;
+                background-color: #ffffff;
+                border-radius: 0.5rem;
+                box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+            }
+        </style>
+    </div>
+</head>
+<body>
+<div class="container mt-4" layout:fragment="content">
+    <h2 class="mb-4 text-center">게시글 수정</h2>
+    <div class="edit-form-container">
+        <!-- updatePostDto 객체에 바인딩하여 제목과 본문만 수정 -->
+        <form th:action="@{/board/edit}" th:object="${updatePostDto}" method="post">
+            <!-- hidden 필드: 게시글 id(postId)와 게시판 코드(boardCode)를 전달 -->
+            <input type="hidden" name="no" th:value="${postId}" />
+            <input type="hidden" name="id" th:value="${boardCode}" />
+            <!-- 제목 입력 필드 -->
+            <div class="mb-3">
+                <label for="title" class="form-label">제목</label>
+                <input type="text" id="title" th:field="*{title}" class="form-control" placeholder="제목을 입력하세요" required />
+            </div>
+            <!-- 본문 입력 필드 -->
+            <div class="mb-3">
+                <label for="content" class="form-label">본문</label>
+                <textarea id="content" th:field="*{content}" class="form-control" rows="8" placeholder="본문을 입력하세요" required></textarea>
+            </div>
+            <!-- 제출 버튼 -->
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">수정 완료</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
