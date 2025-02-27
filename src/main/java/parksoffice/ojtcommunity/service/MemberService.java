@@ -140,7 +140,7 @@ public class MemberService {
     private void validateDuplicateMember(Member member) {
         Optional<Member> foundMember = memberRepository.findByUsername(member.getUsername());
         if (foundMember.isPresent()) {
-            throw new DuplicateMemberException("Already existing member with username: " + member.getUsername());
+            throw new DuplicateMemberException("이미 해당 회원명이 존재합니다: " + member.getUsername());
         }
     }
 

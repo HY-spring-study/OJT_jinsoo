@@ -8,8 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.dto.member.LoginRequestDto;
+import parksoffice.ojtcommunity.exception.DuplicateMemberException;
 import parksoffice.ojtcommunity.service.MemberService;
 
 @Controller
@@ -51,12 +53,19 @@ public class MemberController {
      */
     @PostMapping("/new")
     public String registerMember(@ModelAttribute("member") @Valid Member member,
-                                 BindingResult bindingResult) {
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
             log.warn("Member registration failed: {}", bindingResult.getAllErrors());
             return "members/create";
         }
-        memberService.registerMember(member);
+        try {
+            memberService.registerMember(member);
+        } catch (DuplicateMemberException e) {
+            // 이미 가입된 username인 경우, 경고 메시지를 플래시 속성으로 전달하고 회원가입 페이지로 리다이렉트
+            redirectAttributes.addFlashAttribute("warningMessage", e.getMessage());
+            return "redirect:/members/new";
+        }
         log.info("Registered new member with username: {}", member.getUsername());
         // 회원가입 성공 후 로그인 페이지("/members/login")로 리다이렉트
         return "redirect:/members/login";
