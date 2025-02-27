@@ -1,0 +1,83 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <div layout:fragment="headContent">
+        <style>
+            /* 페이지 전용 추가 스타일 */
+            .post-view {
+                padding: 2rem;
+                background-color: #ffffff;
+                border-radius: 0.5rem;
+                box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+                margin-bottom: 2rem;
+            }
+            .post-meta p {
+                margin-bottom: 0.5rem;
+            }
+            .post-actions {
+                margin-top: 1.5rem;
+            }
+        </style>
+    </div>
+</head>
+<body>
+<div class="container mt-4" layout:fragment="content">
+    <div class="post-view">
+        <!-- 게시글 제목 -->
+        <h1 th:text="${post.title}">게시글 제목</h1>
+
+        <!-- 게시글 본문 -->
+        <div class="mb-3" th:text="${post.content}">
+            게시글 본문 내용이 여기에 표시됩니다.
+        </div>
+
+        <!-- 게시글 메타 정보 -->
+        <div class="post-meta d-flex justify-content-between text-muted">
+            <div>
+                <p>
+                    <strong>작성일: </strong>
+                    <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                </p>
+                <p th:if="${post.updatedAt != null}">
+                    <strong>수정일: </strong>
+                    <span th:text="${#temporals.format(post.updatedAt, 'yyyy-MM-dd HH:mm')}">수정일</span>
+                </p>
+            </div>
+            <div>
+                <p>
+                    <strong>게시판: </strong>
+                    <span th:text="${post.board.name}">게시판 이름</span>
+                </p>
+                <p>
+                    <strong>추천수: </strong>
+                    <span th:text="${post.recommendations.size()}">0</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- 액션 버튼들 -->
+        <div class="post-actions">
+            <!-- 추천하기 버튼 항상 표시 -->
+            <form th:action="@{/board/recommend}" method="post" class="d-inline">
+                <input type="hidden" name="id" th:value="${post.board.code}">
+                <input type="hidden" name="no" th:value="${post.id}">
+                <input type="hidden" name="memberId" th:value="${session.loggedInMember.id}">
+                <button type="submit" class="btn btn-success btn-sm">추천하기</button>
+            </form>
+            <!-- 만약 로그인한 사용자가 게시글 작성자라면 수정/삭제 버튼 표시 -->
+            <div th:if="${session.loggedInMember != null and session.loggedInMember.id == post.author.id}" class="d-inline ms-2">
+                <a th:href="@{/board/edit(id=${post.board.code}, no=${post.id})}" class="btn btn-primary btn-sm">수정</a>
+                <form th:action="@{/board/delete}" method="post" class="d-inline"
+                      onsubmit="return confirm('정말 삭제하시겠습니까?');">
+                    <input type="hidden" name="id" th:value="${post.board.code}">
+                    <input type="hidden" name="no" th:value="${post.id}">
+                    <button type="submit" class="btn btn-danger btn-sm">삭제</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
