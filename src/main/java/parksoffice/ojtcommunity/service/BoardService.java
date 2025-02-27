@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.exception.BoardNotFoundException;
-import parksoffice.ojtcommunity.exception.MemberNotFoundException;
 import parksoffice.ojtcommunity.repository.board.BoardRepository;
 
 import java.util.List;
