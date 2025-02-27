@@ -156,7 +156,7 @@ public class PostService {
 
         // 같은 회원이 이미 추천했는지 확인
         if (postRecommendationRepository.existsByPostIdAndMemberId(postId, memberId)) {
-            throw new AlreadyRecommendedException("User has already recommended this post.");
+            throw new AlreadyRecommendedException("이미 추천한 게시글입니다.");
         }
 
         // memberRepository.getReferenceById()를 사용하여, DB 조회 없이 Member의 참조 객체(프록시)를 획득한다.

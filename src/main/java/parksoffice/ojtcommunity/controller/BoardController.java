@@ -8,11 +8,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import parksoffice.ojtcommunity.domain.board.Board;
 import parksoffice.ojtcommunity.domain.board.Post;
 import parksoffice.ojtcommunity.domain.member.Member;
 import parksoffice.ojtcommunity.dto.board.CreatePostDto;
 import parksoffice.ojtcommunity.dto.board.UpdatePostDto;
+import parksoffice.ojtcommunity.exception.AlreadyRecommendedException;
 import parksoffice.ojtcommunity.service.BoardService;
 import parksoffice.ojtcommunity.service.PostService;
 
@@ -226,22 +228,35 @@ public class BoardController {
      * 게시글 추천 요청을 처리한다.
      * 각 회원은 한 게시글에 대해 한 번만 추천할 수 있다.
      * <p>
-     *     실제 환경에서는 현재 로그인한 회원 정보를 사용해야 하지만,
-     *     이 예시에서는 memberId를 쿼리 파라미터로 받아 처리한다.
+     *     실제 환경에서는 현재 로그인한 회원 정보를 사용하여 처리한다.
+     *     이 예시에서는 HTTP 세션에 저장된 "loggedInMember"를 사용한다.
      * </p>
-     * URL 예시: /board/recommend/?id=male&no=6388256&memberId=2
+     * URL 예시: /board/recommend/?id=male&no=6388256
      *
      * @param boardCode 쿼리 파라미터 'id'에 해당하는 게시판 코드
      * @param postId 쿼리 파라미터 'no'에 해당하는 게시글 번호
-     * @param memberId 추천하는 회원의 식별자 (실제 환경에서는 세션 또는 보안 컨텍스트에서 조회)
-     * @return 게시글 상세 페이지로 리다이렉트 URL
+     * @param redirectAttributes 리다이렉트 시 플래시 속성을 전달하기 위한 객체
+     * @param session 현재 HTTP 세션 (로그인한 Member 객체가 "loggedInMember"로 저장됨)
+     * @return 게시글 상세 페이지로 리다이렉트하는 URL
      */
     @PostMapping("/recommend")
     public String recommendPost(@RequestParam("id") String boardCode,
                                 @RequestParam("no") Long postId,
-                                @RequestParam("memberId") Long memberId) {
-        postService.recommendPost(postId, memberId);
+                                RedirectAttributes redirectAttributes,
+                                HttpSession session) {
+
+        // 세션에서 로그인한 Member 객체를 가져옴
+        Long memberId = ((Member) session.getAttribute("loggedInMember")).getId();
+
+        try {
+            postService.recommendPost(postId, memberId);
+        } catch (AlreadyRecommendedException ex) {
+            // 이미 추천한 경우 경고 메시지를 플래시 속성으로 전달하고 원래 게시글 조회 페이지로 리다이렉트
+            redirectAttributes.addFlashAttribute("warningMessage", ex.getMessage());
+            return "redirect:/board/view?id=" + boardCode + "&no=" + postId;
+        }
         log.info("Post id: {} on board code: {} recommended by member id: {}", postId, boardCode, memberId);
         return "redirect:/board/view?id=" + boardCode + "&no=" + postId;
     }
+
 }
